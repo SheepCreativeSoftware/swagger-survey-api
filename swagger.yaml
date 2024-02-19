@@ -314,8 +314,6 @@ components:
     CSRFToken:
       type: object
       description: 'CSRF Token'
-      required:
-        - CSRFToken
       properties:
         CSRFToken:
           type: string
@@ -325,6 +323,12 @@ components:
 
     Survey:
       type: object
+      required:
+        - surveyName
+        - surveyDescription
+        - choicesType
+        - creatorName
+        - endDate
       properties:
         surveyName:
           description: 'Name of the survey'
@@ -356,6 +360,8 @@ components:
     Options:
       type: object
       description: 'Different options of the survey'
+      required:
+        - options
       properties:
         options:
           type: array
@@ -391,6 +397,8 @@ components:
     Results:
       type: object
       description: 'Results from the survey'
+      required:
+        - results
       properties:
         results:
           type: array
