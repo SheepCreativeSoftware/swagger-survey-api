@@ -190,7 +190,7 @@ paths:
   /answer/submit:
     post:
       tags:
-        - survey
+        - answer
       description: 'Submits a answer to a survey'
       parameters:
         - $ref: '#/components/parameters/CSRFToken'
@@ -218,7 +218,7 @@ paths:
   /results/get:
     get:
       tags:
-        - survey
+        - result
       description: 'Returns the data from a existing survey'
       parameters:
         - $ref: '#/components/parameters/CreationToken'
