@@ -206,13 +206,13 @@ paths:
                   - $ref: '#/components/schemas/PublicToken'
                   - $ref: '#/components/schemas/Answer'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/Success'
+                  - $ref: '#/components/schemas/Created'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -235,8 +235,6 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Success'
-                  - $ref: '#/components/schemas/Survey'
-                  - $ref: '#/components/schemas/Options'
                   - $ref: '#/components/schemas/Results'
         '400':
           $ref: '#/components/responses/400'
