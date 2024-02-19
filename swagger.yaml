@@ -382,14 +382,15 @@ components:
               type: string
               format: uuid
               description: 'UUID of the specific option'
-      example: [
-        {
-          sessionId: "aaaaa-bbbbb-bbbbb-ccccc",
-          optionSelection: [
-            "aaaaa-bbbbb-bbbbb-ccccc",
-          ]
-        }
-      ]
+      example: 
+        result: [
+          {
+            sessionId: "aaaaa-bbbbb-bbbbb-ccccc",
+            optionSelection: [
+              "aaaaa-bbbbb-bbbbb-ccccc",
+            ]
+          }
+        ]
 
     Answer:
       type: object
