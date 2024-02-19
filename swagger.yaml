@@ -18,19 +18,17 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Success'
-                  - type: object
-                    properties:
-                      CSFRToken: # the unique user id
-                        type: string
-                        format: hash
-                    example:
-                      CSRFToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+                  - $ref: '#/components/schemas/CSRFToken'
         '500':
           $ref: '#/components/responses/500'
+
   /open-share:
     get:
       tags:
         - default
+      description: 'Returns a survey for answering'
+      parameters:
+        - $ref: '#/components/parameters/PublicToken'
       responses:
         '200':
           description: OK
@@ -39,17 +37,152 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Success'
-                  - type: object
-                    properties:
-                      CSFRToken: # the unique user id
-                        type: string
-                        format: hash
-                    example:
-                      CSRFToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+                  - $ref: '#/components/schemas/Survey'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /survey/get:
+    get:
+      tags:
+        - survey
+      description: 'Returns the data from a existing survey'
+      parameters:
+        - $ref: '#/components/parameters/CreationToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - $ref: '#/components/schemas/Survey'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /survey/submit:
+    post:
+      tags:
+        - survey
+      description: 'Submits a new survey'
+      parameters:
+        - $ref: '#/components/parameters/CSRFToken'
+      requestBody:
+        content:
+          application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Survey'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Created'
+                  - $ref: '#/components/schemas/CreationToken'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /survey/update:
+    post:
+      tags:
+        - survey
+      description: 'Submits a new survey'
+      parameters:
+        - $ref: '#/components/parameters/CSRFToken'
+      requestBody:
+        content:
+          application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Survey'
+                  - $ref: '#/components/schemas/CreationToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /survey/remove:
+    post:
+      tags:
+        - survey
+      description: 'Submits a new survey'
+      parameters:
+        - $ref: '#/components/parameters/CSRFToken'
+      requestBody:
+        content:
+          application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/CreationToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
 
 components:
+  parameters:
+    CSRFToken:
+      name: x-csrf-token
+      in: header
+      description: 'CSRF Token'
+      schema:
+        type: string
+        format: base54
+        example: 'djalsdjalsjdadjsasjkljd3-diojd'
+    PublicToken:
+      name: publicToken
+      in: query
+      description: 'Token to open a survey'
+      required: true
+      schema:
+        type: string
+        format: base64url
+      example: 'djalsdjalsjdadjsasjkljd3-diojd'
+    CreationToken:
+      name: creationToken
+      in: query
+      description: 'Token to edit a survey'
+      required: true
+      schema:
+        type: string
+        format: base64url
+      example: 'djalsdjalsjdadjsasjkljd3-diojd'
+
   schemas:
     Success:
       type: object
@@ -71,6 +204,85 @@ components:
       example:
         status: 'Created'
         statusCode: 201
+
+    CSRFToken:
+      type: object
+      properties:
+        CSRFToken: # the unique user id
+          type: string
+          format: base64
+      example:
+        CSRFToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+
+    Survey:
+      type: object
+      properties:
+        surveyName:
+          description: 'Name of the survey'
+          type: string
+        surveyDescription:
+          description: 'Description of the survey'
+          type: string
+        choicesType:
+          description: 'Survey is single or multiple choice?'
+          type: string
+          enum:
+            - 'single'
+            - 'multiple'
+        creatorName:
+          description: 'Who has created the survey'
+          type: string
+        endDate:
+          description: 'When will the survey end?'
+          type: string
+          format: ISO-DateString
+        options:
+          description: 'Different options of the survey'
+          type: array
+          minItems: 2
+          items:
+            type: object
+            properties:
+              optionName:
+                description: 'Question of the option'
+                type: string
+              content: 
+                description: 'Additional context of the survey'
+                type: string
+      example:
+        surveyName: 'The Survey'
+        surveyDescription: 'What do you think about?'
+        choicesType: 'single'
+        creatorName: 'John Doe'
+        endDate: '2024-02-19T18:09:00.967Z'
+        options: [
+          {
+            optionName: 'Choice 1',
+            content: 'Context of the choice'
+          },
+          {
+            optionName: 'Choice 2',
+            content: 'Context of the choice'
+          }
+        ]
+
+    CreationToken:
+      type: object
+      properties:
+        creationToken: # the unique user id
+          type: string
+          format: base64url
+      example:
+        creationToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+    PublicToken:
+      type: object
+      properties:
+        publicToken: # the unique user id
+          type: string
+          format: base64url
+      example:
+        publicToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+          
   responses:
     '400':
       description: 'Invalid request'
