@@ -383,7 +383,7 @@ components:
               format: uuid
               description: 'UUID of the specific option'
       example: 
-        result: [
+        results: [
           {
             sessionId: "aaaaa-bbbbb-bbbbb-ccccc",
             optionSelection: [
