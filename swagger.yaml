@@ -63,6 +63,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Success'
+                  - $ref: '#/components/schemas/Options'
                   - $ref: '#/components/schemas/Survey'
         '400':
           $ref: '#/components/responses/400'
@@ -112,6 +113,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Survey'
+                  - $ref: '#/components/schemas/Options'
       responses:
         '201':
           description: Created
@@ -120,7 +122,6 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Created'
-                  - $ref: '#/components/schemas/Options'
                   - $ref: '#/components/schemas/CreationToken'
         '400':
           $ref: '#/components/responses/400'
