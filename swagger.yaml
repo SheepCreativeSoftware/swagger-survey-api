@@ -1,18 +1,28 @@
 openapi: '3.0.2'
 info:
   title: Survey API
+  license:
+    name: MIT
+  description: 'Simple API to manage a simple survey'
   version: '1.0'
 servers:
   - url: https://{subdomain}.sheepcs.de/api/v1
+    description: 'Public URL'
     variables:
       subdomain:
         default: survey
+  - url: https://localhost:{port}/api/v1
+    description: 'Local testing URL'
+    variables:
+      port:
+        default: '3000'
 
 paths:
   /start-session:
     get:
       tags:
         - public
+      description: 'Starts a new browser session'
       responses:
         '200':
           description: OK
@@ -77,7 +87,7 @@ paths:
     get:
       tags:
         - survey
-      description: 'Returns the data from a existing survey'
+      description: 'Returns a link to be shared to others for answering'
       parameters:
         - $ref: '#/components/parameters/CreationToken'
       responses:
@@ -95,7 +105,7 @@ paths:
                         type: string
                         format: url
                     example:
-                      shareLink: https://survey.sheepcs.de/?shareLink=bafcee79828347-liencc9djpaw
+                      shareLink: https://survey.sheepcs.de/?shareLink=NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -137,7 +147,7 @@ paths:
     post:
       tags:
         - survey
-      description: 'Submits a new survey'
+      description: 'Updates a existing survey'
       parameters:
         - $ref: '#/components/parameters/CSRFToken'
       requestBody:
@@ -167,7 +177,7 @@ paths:
     post:
       tags:
         - survey
-      description: 'Submits a new survey'
+      description: 'Removes a existing survey'
       parameters:
         - $ref: '#/components/parameters/CSRFToken'
       requestBody:
@@ -224,7 +234,7 @@ paths:
     get:
       tags:
         - result
-      description: 'Returns the data from a existing survey'
+      description: 'Returns the results from a existing survey'
       parameters:
         - $ref: '#/components/parameters/CreationToken'
       responses:
@@ -250,19 +260,22 @@ components:
       name: x-csrf-token
       in: header
       description: 'CSRF Token'
+      required: true
       schema:
         type: string
         format: base54
-        example: 'djalsdjalsjdadjsasjkljd3-diojd'
+        example: 'NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh'
+
     PublicToken:
       name: publicToken
       in: query
-      description: 'Token to open a survey'
+      description: 'Token to open and answer a survey'
       required: true
       schema:
         type: string
         format: base64url
-      example: 'djalsdjalsjdadjsasjkljd3-diojd'
+      example: 'NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh'
+
     CreationToken:
       name: creationToken
       in: query
@@ -271,11 +284,12 @@ components:
       schema:
         type: string
         format: base64url
-      example: 'djalsdjalsjdadjsasjkljd3-diojd'
+      example: 'NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh'
 
   schemas:
     Success:
       type: object
+      description: 'The request has succeeded'
       properties:
         status:
           type: string
@@ -284,8 +298,10 @@ components:
       example:
         status: 'OK'
         statusCode: 200
+
     Created:
       type: object
+      description: 'The requests element has been created'
       properties:
         status:
           type: string
@@ -297,12 +313,15 @@ components:
 
     CSRFToken:
       type: object
+      description: 'CSRF Token'
+      required:
+        - CSRFToken
       properties:
-        CSRFToken: # the unique user id
+        CSRFToken:
           type: string
           format: base64
       example:
-        CSRFToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+        CSRFToken: 'NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh'
 
     Survey:
       type: object
@@ -335,65 +354,74 @@ components:
         
 
     Options:
+      type: object
       description: 'Different options of the survey'
-      type: array
-      minItems: 2
-      items:
-        type: object
-        required:
-          - optionName
-          - content
-        properties:
-          optionId:
-            type: string
-            format: uuid
-            description: 'Not required on submit (As it is unkown)'
-          optionName:
-            description: 'Question of the option'
-            type: string
-          content: 
-            description: 'Additional context of the survey'
-            type: string
+      properties:
+        options:
+          type: array
+          minItems: 2
+          items:
+            type: object
+            required:
+              - optionName
+              - content
+            properties:
+              optionId:
+                type: string
+                format: uuid
+                description: 'Not required on submit (As it is unkown)'
+              optionName:
+                description: 'Question of the option'
+                type: string
+              content: 
+                description: 'Additional context of the survey'
+                type: string
       example:
         options: [
           {
-            optionName: 'Choice 1',
+            optionName: 'Choice Name 1',
             content: 'Context of the choice'
           },
           {
-            optionName: 'Choice 2',
+            optionName: 'Choice Name 2',
             content: 'Context of the choice'
           }
         ]
 
     Results:
-      type: array
-      minItems: 0
-      items:
-        properties:
-          sessionId:
-            type: string
-            format: uuid
-            description: 'Id of the the answer session'
-          optionSelection:
-            type: array
-            minItems: 1
-            items:
-              type: string
-              format: uuid
-              description: 'UUID of the specific option'
+      type: object
+      description: 'Results from the survey'
+      properties:
+        results:
+          type: array
+          minItems: 0
+          description: 'Array for each session'
+          items:
+            properties:
+              sessionId:
+                type: string
+                format: uuid
+                description: 'Id of the the answers session'
+              optionSelection:
+                type: array
+                minItems: 1
+                items:
+                  type: string
+                  format: uuid
+                  description: 'UUID of the specific option/options'
       example: 
         results: [
           {
-            sessionId: "aaaaa-bbbbb-bbbbb-ccccc",
+            sessionId: "aaaaa-bbbbb-ccccc-ddddd",
             optionSelection: [
-              "aaaaa-bbbbb-bbbbb-ccccc",
+              "aaaaa-bbbbb-ccccc-ddddd",
             ]
           }
         ]
 
     Answer:
       type: object
+      description: 'Answer to the survey of the session'
       properties:
         optionSelection:
           type: array
@@ -401,34 +429,41 @@ components:
           items:
             type: string
             format: uuid
-            description: 'UUID of the specific option'
+            description: 'UUID of the specific option/options'
       example: 
           optionSelection: [
-            "aaaaa-bbbbb-bbbbb-ccccc",
+            "aaaaa-bbbbb-ccccc-ddddd",
           ]
 
     CreationToken:
       type: object
+      description: 'Token to edit a survey'
+      required:
+        - creationToken
       properties:
         creationToken: # the unique user id
           type: string
           format: base64url
           description: 'Needed to manage survey'
       example:
-        creationToken: 'djalsdjalsjdadjsasjkljd3-diojd'
+        creationToken: 'NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh'
+
     PublicToken:
       type: object
+      description: 'Token to open and answer a survey'
+      required:
+        - publicToken
       properties:
         publicToken: # the unique user id
           type: string
           format: base64url
           description: 'Needed for public interaction with survey'
       example:
-        publicToken: 'djalsdjalsjdadjsasjkljd3-diojd'
-          
+        publicToken: 'NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh'
+
   responses:
     '400':
-      description: 'Invalid request'
+      description: 'The request is invalid'
       content:
         application/json:
           schema:
@@ -442,7 +477,7 @@ components:
               status: 'Invalid Request'
               statusCode: 400
     '403':
-      description: 'Forbidden'
+      description: 'The request requires a specific token and/or CSRFToken to authorize'
       content:
         application/json:
           schema:
@@ -456,7 +491,7 @@ components:
               status: 'Forbidden'
               statusCode: 403
     '404':
-      description: 'Not Found'
+      description: 'The ressource was not found'
       content:
         application/json:
           schema:
@@ -470,7 +505,7 @@ components:
               status: 'Not Found'
               statusCode: 404
     '500':
-      description: 'Server Error'
+      description: 'A internal Server Error has happend'
       content:
         application/json:
           schema:
