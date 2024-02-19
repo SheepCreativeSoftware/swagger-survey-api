@@ -6,9 +6,6 @@ info:
     url: https://opensource.org/license/mit/
   description: 'Simple API to manage a simple survey'
   version: '1.0.0'
-  externalDocs:
-    description: 'Find out more'
-    url: https://github.com/SheepCreativeSoftware/survey-api
 servers:
   - url: https://{subdomain}.sheepcs.de/api/v1
     description: 'Public URL'
@@ -36,6 +33,17 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Success'
                   - $ref: '#/components/schemas/CSRFToken'
+          headers:
+            Set-Cookie:
+              schema: 
+                type: string
+                description: 'Session Cookie'
+                example: org.cups.sid=abcde12345; Path=/; HttpOnly
+            "\0Set-Cookie":
+              schema: 
+                type: string
+                description: CSRF Cookie
+                example: host.x-csrf-token; Path=/; HttpOnly Secure
         '500':
           $ref: '#/components/responses/500'
 
