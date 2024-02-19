@@ -41,6 +41,7 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Success'
                   - $ref: '#/components/schemas/Survey'
+                  - $ref: '#/components/schemas/Options'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -63,8 +64,8 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Success'
-                  - $ref: '#/components/schemas/Options'
                   - $ref: '#/components/schemas/Survey'
+                  - $ref: '#/components/schemas/Options'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -85,14 +86,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                description: 'Link for answering the survey'
-                properties:
-                  shareLink:
-                    type: string
-                    format: url
-                example:
-                  shareLink: https://survey.sheepcs.de/?shareLink=bafcee79828347-liencc9djpaw
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    description: 'Link for answering the survey'
+                    properties:
+                      shareLink:
+                        type: string
+                        format: url
+                    example:
+                      shareLink: https://survey.sheepcs.de/?shareLink=bafcee79828347-liencc9djpaw
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -201,6 +204,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/PublicToken'
+                  - $ref: '#/components/schemas/Answer'
       responses:
         '200':
           description: OK
@@ -230,6 +234,7 @@ paths:
             application/json:
               schema:
                 allOf:
+                  - $ref: '#/components/schemas/Success'
                   - $ref: '#/components/schemas/Survey'
                   - $ref: '#/components/schemas/Options'
                   - $ref: '#/components/schemas/Results'
@@ -387,7 +392,21 @@ components:
           ]
         }
       ]
-      
+
+    Answer:
+      type: object
+      properties:
+        optionSelection:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+            description: 'UUID of the specific option'
+      example: 
+          optionSelection: [
+            "aaaaa-bbbbb-bbbbb-ccccc",
+          ]
 
     CreationToken:
       type: object
