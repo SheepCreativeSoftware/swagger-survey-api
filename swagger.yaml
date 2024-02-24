@@ -488,7 +488,7 @@ components:
               statusCode:
                 type: number
             example:
-              status: 'Invalid Request'
+              status: 'Bad Request'
               statusCode: 400
     '403':
       description: 'The request requires a specific token and/or CSRFToken to authorize'
