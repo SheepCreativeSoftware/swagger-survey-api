@@ -66,8 +66,6 @@ paths:
                   - $ref: '#/components/schemas/Options'
         '400':
           $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
 
@@ -90,8 +88,6 @@ paths:
                   - $ref: '#/components/schemas/Options'
         '400':
           $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
 
@@ -120,8 +116,6 @@ paths:
                       shareLink: https://survey.sheepcs.de/?shareLink=NDIzNHRmcm9oanU0Mzg5emZvaDg0OXJ6ZmhmODg0Zno5NHo3OGY3OTR6ZnNh
         '400':
           $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
 
@@ -260,8 +254,6 @@ paths:
                   - $ref: '#/components/schemas/Results'
         '400':
           $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
 
