@@ -398,10 +398,12 @@ components:
         options: [
           {
             optionName: 'Choice Name 1',
+            optionId: '28dc30d0-de6c-4566-83b6-b51b2bc1e59f',
             content: 'Context of the choice'
           },
           {
             optionName: 'Choice Name 2',
+            optionId: '211c623d-b18b-4df8-a531-4c7a68e9fcb2',
             content: 'Context of the choice'
           }
         ]
