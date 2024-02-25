@@ -63,7 +63,7 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Success'
                   - $ref: '#/components/schemas/Survey'
-                  - $ref: '#/components/schemas/Options'
+                  - $ref: '#/components/schemas/OptionsWithId'
         '400':
           $ref: '#/components/responses/400'
         '500':
@@ -85,7 +85,7 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Success'
                   - $ref: '#/components/schemas/Survey'
-                  - $ref: '#/components/schemas/Options'
+                  - $ref: '#/components/schemas/OptionsWithId'
         '400':
           $ref: '#/components/responses/400'
         '500':
@@ -162,7 +162,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Survey'
-                  - $ref: '#/components/schemas/Options'
+                  - $ref: '#/components/schemas/OptionsWithId'
                   - $ref: '#/components/schemas/CreationToken'
       responses:
         '200':
@@ -374,6 +374,40 @@ components:
             type: object
             required:
               - optionName
+              - content
+            properties:
+              optionName:
+                description: 'Question of the option'
+                type: string
+              content: 
+                description: 'Additional context of the survey'
+                type: string
+      example:
+        options: [
+          {
+            optionName: 'Choice Name 1',
+            content: 'Context of the choice'
+          },
+          {
+            optionName: 'Choice Name 2',
+            content: 'Context of the choice'
+          }
+        ]
+    
+    OptionsWithId:
+      type: object
+      description: 'Different options of the survey'
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          minItems: 2
+          items:
+            type: object
+            required:
+              - optionName
+              - optionId
               - content
             properties:
               optionId:
