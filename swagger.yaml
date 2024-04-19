@@ -212,10 +212,8 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/SurveyWithId'
-                  - oneOf:
-                    - $ref: '#/components/schemas/OptionsNew'
-                    - $ref: '#/components/schemas/OptionsUpdate'
-                    - $ref: '#/components/schemas/OptionsDelete'
+                  - $ref: '#/components/schemas/OptionsAdjust'
+
       responses:
         '200':
           description: OK
@@ -451,7 +449,7 @@ components:
           }
         ]
 
-    OptionsDelete:
+    OptionsAdjust:
       type: object
       description: 'Removes Options from the survey'
       required:
@@ -461,54 +459,68 @@ components:
           type: array
           minItems: 1
           items:
-            type: object
-            required:
-              - optionId
-              - status
-            properties:
-              optionId:
-                type: string
-                format: uuid
-              status: 
-                description: 'Delete'
-                type: string
+            oneOf:
+              - $ref: '#/components/schemas/OptionsNew'
+              - $ref: '#/components/schemas/OptionsUpdate'
+              - $ref: '#/components/schemas/OptionsDelete'
       example:
         options: [
           {
             optionId: '28dc30d0-de6c-4566-83b6-b51b2bc1e59f',
             status: 'Delete'
           },
+          {
+            optionId: '28dc30d0-de6c-4566-83b6-b51b2bc1e59f',
+            optionName: 'Choice Name 2',
+            content: 'Context of the choice',
+            status: 'New'
+          },
+          {
+            optionId: '28dc30d0-de6c-4566-83b6-b51b2bc1e59f',
+            optionName: 'Choice Name 2',
+            content: 'Context of the choice',
+            status: 'Update'
+          },
         ]
+
+    OptionsDelete:
+      type: object
+      required:
+        - optionId
+        - status
+      properties:
+        optionId:
+          type: string
+          format: uuid
+        status: 
+          description: 'Delete'
+          type: string
+      example:
+        options: {
+            optionId: '28dc30d0-de6c-4566-83b6-b51b2bc1e59f',
+            status: 'Delete'
+          }
 
     OptionsNew:
       type: object
-      description: 'Adds Options to the survey'
       required:
-        - options
+        - optionId
+        - optionName
+        - content
+        - status
       properties:
-        options:
-          type: array
-          minItems: 1
-          items:
-            type: object
-            required:
-              - optionId
-              - optionName
-              - content
-              - status
-            properties:
-              optionId:
-                type: string
-                format: uuid
-              optionName:
-                description: 'Question of the option'
-                type: string
-              content: 
-                description: 'Additional context of the survey'
-                type: string
-              status: 
-                description: 'New'
-                type: string
+        optionId:
+          type: string
+          format: uuid
+        optionName:
+          description: 'Question of the option'
+          type: string
+        content: 
+          description: 'Additional context of the survey'
+          type: string
+        status: 
+          description: 'New'
+          type: string
       example:
         options: [
           {
@@ -516,36 +528,27 @@ components:
             optionName: 'Choice Name 2',
             content: 'Context of the choice',
             status: 'New'
-          },
+          }
         ]
 
     OptionsUpdate:
       type: object
-      description: 'Adjusts Options on the survey'
       required:
-        - options
+        - optionId
+        - status
       properties:
-        options:
-          type: array
-          minItems: 1
-          items:
-            type: object
-            required:
-              - optionId
-              - status
-            properties:
-              optionId:
-                type: string
-                format: uuid
-              optionName:
-                description: 'Question of the option'
-                type: string
-              content: 
-                description: 'Additional context of the survey'
-                type: string
-              status: 
-                description: 'Delete'
-                type: string
+        optionId:
+          type: string
+          format: uuid
+        optionName:
+          description: 'Question of the option'
+          type: string
+        content: 
+          description: 'Additional context of the survey'
+          type: string
+        status: 
+          description: 'Delete'
+          type: string
       example:
         options: [
           {
@@ -553,7 +556,7 @@ components:
             optionName: 'Choice Name 2',
             content: 'Context of the choice',
             status: 'Update'
-          },
+          }
         ]
 
   responses:
@@ -624,5 +627,3 @@ components:
             example:
               message: 'Reason'
 
-security:
-  - BearerToken: []
