@@ -428,7 +428,7 @@ components:
               optionId:
                 type: string
                 format: uuid
-                description: 'Not required on submit (As it is unkown)'
+                description: 'Id of that option'
               optionName:
                 description: 'Question of the option'
                 type: string
@@ -547,7 +547,7 @@ components:
           description: 'Additional context of the survey'
           type: string
         status: 
-          description: 'Delete'
+          description: 'Update'
           type: string
       example:
         options: [
